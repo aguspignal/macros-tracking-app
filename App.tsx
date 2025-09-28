@@ -3,7 +3,7 @@ import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-c
 import { NavigationContainer } from "@react-navigation/native"
 import { queryClient } from "./src/lib/queryClient"
 import { QueryClientProvider } from "@tanstack/react-query"
-import Root from "./src/Root"
+import Main from "./Main"
 
 export default function App() {
 	return (
@@ -11,7 +11,7 @@ export default function App() {
 			<SafeAreaProvider style={{ marginBottom: initialWindowMetrics?.insets.bottom }}>
 				<QueryClientProvider client={queryClient}>
 					<NavigationContainer>
-						<Root />
+						<Main />
 					</NavigationContainer>
 				</QueryClientProvider>
 			</SafeAreaProvider>

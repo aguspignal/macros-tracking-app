@@ -10,6 +10,11 @@ export type AuthStackParams = {
 	SignUp: undefined
 }
 
+export type AuthStackScreenProps<T extends keyof AuthStackParams> = NativeStackScreenProps<
+	AuthStackParams,
+	T
+>
+
 export type RootStackParams = {
 	Tabs: NavigatorScreenParams<TabParams>
 	Food: {

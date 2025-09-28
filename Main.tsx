@@ -1,11 +1,11 @@
-import { RootNavigator } from "./navigation/RootStack"
 import { Session } from "@supabase/supabase-js"
 import { StatusBar } from "expo-status-bar"
-import { supabase } from "./lib/supabase"
+import { supabase } from "./src/lib/supabase"
 import { useEffect, useState } from "react"
-import AuthNavigator from "./navigation/AuthStack"
+import AuthNavigator from "./src/navigation/AuthStack"
+import Root from "./src/navigation/RootStack"
 
-export default function Root() {
+export default function Main() {
 	const [currentSession, setCurrentSession] = useState<Session | null>(null)
 
 	useEffect(() => {
@@ -21,7 +21,7 @@ export default function Root() {
 	return (
 		<>
 			<StatusBar style="light" />
-			{currentSession ? <RootNavigator /> : <AuthNavigator />}
+			{currentSession ? <Root uuid={currentSession.user.id} /> : <AuthNavigator />}
 		</>
 	)
 }
