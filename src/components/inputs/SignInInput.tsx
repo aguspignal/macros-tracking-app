@@ -1,23 +1,22 @@
+import { AuthStackParams } from "../../types/navigation"
 import { Control, Controller, useController } from "react-hook-form"
 import { inputStyles } from "../../resources/styles/inputStyles"
-import { LoginStackParams } from "../../types/navigation"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { SignInFormValues } from "../../types/forms"
-import { Text, TextInput, TouchableOpacity, View } from "react-native"
+import { TextInput, TouchableOpacity, View } from "react-native"
 import { useState } from "react"
-import { useTranslation } from "react-i18next"
 import MCIcon from "../icons/MCIcon"
+import StyledText from "../texts/StyledText"
 import TextButton from "../buttons/TextButton"
 
 type Props = {
 	name: keyof SignInFormValues
 	control: Control<SignInFormValues>
 	forgotPswBtn?: boolean
-	navigation?: NativeStackNavigationProp<LoginStackParams, "SignIn">
+	navigation?: NativeStackNavigationProp<AuthStackParams, "SignIn">
 }
 
 export default function SignInInput({ name, control, forgotPswBtn = false, navigation }: Props) {
-	const { t } = useTranslation()
 	const { field, fieldState } = useController({ name, control })
 
 	const [passwordVisible, setPasswordVisible] = useState(false)
@@ -32,9 +31,7 @@ export default function SignInInput({ name, control, forgotPswBtn = false, navig
 		pattern: name === "email" ? /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i : /.+/,
 	}
 
-	function handleForgotPsw() {
-		if (navigation) navigation.navigate("PasswordRecovery")
-	}
+	function handleForgotPsw() {}
 
 	function handleShowPassword() {
 		if (name === "password") setPasswordVisible((prev) => !prev)
@@ -42,9 +39,9 @@ export default function SignInInput({ name, control, forgotPswBtn = false, navig
 
 	return (
 		<View style={inputStyles.inputContainer}>
-			<Text style={inputStyles.label}>
-				{name === "email" ? t("attributes.email") : t("attributes.password")}
-			</Text>
+			<StyledText type="note" style={inputStyles.label}>
+				{name === "email" ? "Email" : "Password"}
+			</StyledText>
 
 			<Controller
 				name={name}
@@ -73,15 +70,17 @@ export default function SignInInput({ name, control, forgotPswBtn = false, navig
 			/>
 
 			{fieldState.error ? (
-				<Text style={inputStyles.errorMessage}>{fieldState.error.message}</Text>
+				<StyledText type="note" color="danger" style={inputStyles.errorMessage}>
+					{fieldState.error.message}
+				</StyledText>
 			) : null}
 
 			{forgotPswBtn ? (
 				<TextButton
 					onPress={handleForgotPsw}
-					title={t("questions.forgot-password-question")}
-					color="secondary"
-					size="xs"
+					title="Did you forget your password?"
+					textType="boldNote"
+					color="lighBlue"
 					containerStyle={inputStyles.forgotPswBtn}
 				/>
 			) : null}

@@ -7,11 +7,10 @@ export const inputStyles = StyleSheet.create({
 	},
 	label: {
 		alignSelf: "flex-start",
-		fontWeight: "bold",
-		fontSize: theme.fontSize.xs,
+		marginBottom: theme.spacing.xxs,
 	},
 	input: {
-		color: theme.colors.textDark,
+		color: theme.colors.textLight,
 		fontSize: theme.fontSize.s,
 		paddingHorizontal: theme.spacing.s,
 		paddingVertical: theme.spacing.xs,
@@ -20,9 +19,6 @@ export const inputStyles = StyleSheet.create({
 		borderColor: theme.colors.grayLight,
 	},
 	errorMessage: {
-		color: theme.colors.danger,
-		fontSize: theme.fontSize.xs,
-		fontWeight: "600",
 		marginTop: theme.spacing.xxs,
 	},
 	forgotPswBtn: {

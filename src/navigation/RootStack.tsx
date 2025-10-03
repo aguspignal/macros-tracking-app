@@ -13,11 +13,15 @@ type Props = {
 }
 export default function Root({ uuid }: Props) {
 	const { getUserInitialData } = useUserQuery()
-	const { isPending, isLoading, isFetching } = getUserInitialData(uuid)
+	const { isPending, isLoading, isFetching, data } = getUserInitialData(uuid)
 
 	useEffect(() => {
 		invalidateQueries(GETINITIALDATA_KEY(uuid))
 	}, [uuid])
+
+	useEffect(() => {
+		console.log(data)
+	}, [data])
 
 	return isPending || isLoading || isFetching ? <Loading /> : <RootNavigator />
 }

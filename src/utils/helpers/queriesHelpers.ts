@@ -1,6 +1,7 @@
 import { PostgrestError } from "@supabase/supabase-js"
 // import ToastNotification from "../../components/notifications/ToastNotification"
-import { queryClient } from "../../lib/queryClient"
+import { queryClient } from "../../lib/reactQuery"
+import ToastNotification from "../../components/notifications/ToastNotification"
 
 export function notifyIfRequestError(
 	response: any | PostgrestError | null,
@@ -28,4 +29,11 @@ export function invalidateQueries(key: (string | number)[]) {
 
 export function isPostgrestError(elem: any) {
 	return elem instanceof PostgrestError
+}
+
+export function notifyPostgrestError(error: PostgrestError) {
+	ToastNotification({
+		title: error.code,
+		description: error.message,
+	})
 }

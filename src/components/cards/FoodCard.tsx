@@ -1,13 +1,13 @@
 import { BasicMacros, DatabaseFood } from "../../types/foods"
-import { StyleSheet, Touchable, TouchableOpacity, View } from "react-native"
+import { RootStackNavigationProp } from "../../types/navigation"
+import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { theme } from "../../resources/theme"
+import { useNavigation } from "@react-navigation/native"
+import { useState } from "react"
 import IconButton from "../buttons/IconButton"
 import MacrosSummaryText from "../texts/MacrosSummaryText"
 import MCIcon from "../icons/MCIcon"
 import StyledText from "../texts/StyledText"
-import { useState } from "react"
-import { useNavigation } from "@react-navigation/native"
-import { RootStackNavigationProp } from "../../types/navigation"
 
 type Props = {
 	food: DatabaseFood

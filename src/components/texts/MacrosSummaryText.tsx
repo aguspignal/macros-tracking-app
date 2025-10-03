@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { theme } from "../../resources/theme"
 import StyledText from "./StyledText"
 
@@ -16,9 +16,9 @@ export default function MacrosSummaryText({
 }: Props) {
 	return (
 		<View style={styles.container}>
-			<StyledText type="text" color={color}>{`P: ${protein}`}</StyledText>
-			<StyledText type="text" color={color}>{`F: ${fat}`}</StyledText>
-			<StyledText type="text" color={color}>{`C: ${carbs}`}</StyledText>
+			<StyledText type="text" color={color}>{`${protein} P`}</StyledText>
+			<StyledText type="text" color={color}>{`${fat} F`}</StyledText>
+			<StyledText type="text" color={color}>{`${carbs} C`}</StyledText>
 		</View>
 	)
 }

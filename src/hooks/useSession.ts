@@ -29,7 +29,10 @@ export default function useSession() {
 			password: password,
 		})
 
-		if (error) return error
+		if (error) {
+			console.log(error)
+			return error
+		}
 		return null
 	}
 

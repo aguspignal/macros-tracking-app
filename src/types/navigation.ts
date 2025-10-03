@@ -1,8 +1,7 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs"
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native"
-import { DatabaseFood, DatabaseServing } from "./foods"
+import { DatabaseFood, DatabaseServing, TimeOfDay } from "./foods"
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack"
-import { TimeOfDay } from "./supabase"
 
 export type AuthStackParams = {
 	Welcome: undefined

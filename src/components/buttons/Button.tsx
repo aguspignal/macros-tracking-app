@@ -1,13 +1,7 @@
-import {
-	ActivityIndicator,
-	StyleProp,
-	Text,
-	TextStyle,
-	TouchableOpacity,
-	ViewStyle,
-} from "react-native"
+import { ActivityIndicator, StyleProp, TextStyle, TouchableOpacity, ViewStyle } from "react-native"
 import { theme } from "../../resources/theme"
 import MCIcon from "../icons/MCIcon"
+import StyledText from "../texts/StyledText"
 
 type Props = {
 	title: string
@@ -34,11 +28,11 @@ export default function Button({
 	alignSelf = false,
 	style,
 }: Props) {
-	const textColor = isDisabled
-		? theme.colors.grayDark
+	const textColor: keyof typeof theme.colors = isDisabled
+		? "grayDark"
 		: isBordered
-		? theme.colors[color as keyof typeof theme.colors]
-		: theme.colors.textDark
+		? color
+		: "textDark"
 
 	const iconSize = size === "s" ? theme.fontSize.l : theme.fontSize.xl
 
@@ -60,18 +54,12 @@ export default function Button({
 		alignItems: "center",
 		justifyContent: "center",
 		paddingVertical: paddingVertical,
-		paddingHorizontal: theme.spacing.s,
+		paddingHorizontal: theme.spacing.m,
 		backgroundColor: bgColor,
 		borderWidth: isDisabled ? 0 : isBordered ? 1 : 0,
 		borderColor: borderColor,
 		borderRadius: 80,
 		alignSelf: alignSelf ? "center" : "auto",
-	}
-
-	const textStyles: StyleProp<TextStyle> = {
-		color: textColor,
-		fontSize: theme.fontSize.s,
-		fontWeight: "600",
 	}
 
 	const iconStyles: StyleProp<TextStyle> = {
@@ -92,7 +80,9 @@ export default function Button({
 			disabled={isDisabled}
 		>
 			{icon === undefined ? null : <MCIcon name={icon} style={iconStyles} />}
-			<Text style={textStyles}>{title}</Text>
+			<StyledText type={size === "s" ? "boldNote" : "boldText"} color={textColor}>
+				{title}
+			</StyledText>
 		</TouchableOpacity>
 	)
 }

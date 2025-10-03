@@ -1,7 +1,6 @@
-import { FoodAndServing } from "../../types/foods"
+import { FoodAndServing, TimeOfDay } from "../../types/foods"
 import { ScrollView, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import { theme } from "../../resources/theme"
-import { TimeOfDay } from "../../types/supabase"
 import { useState } from "react"
 import FoodCard from "./FoodCard"
 import MacrosSummaryText from "../texts/MacrosSummaryText"
@@ -62,7 +61,7 @@ export default function TimeOfDayCard({ timeOfDay, onPressAdd, foodsAndServings 
 				) : (
 					<View style={styles.foodsContainer}>
 						{foodsAndServings?.map((fs) => (
-							<FoodCard food={fs.foood} servingText={fs.serving.serving_text} />
+							<FoodCard food={fs.food} servingText={fs.serving.serving_text} />
 						))}
 					</View>
 				)}

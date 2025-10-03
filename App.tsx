@@ -1,7 +1,7 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { NavigationContainer } from "@react-navigation/native"
-import { queryClient } from "./src/lib/queryClient"
+import { queryClient } from "./src/lib/reactQuery"
 import { QueryClientProvider } from "@tanstack/react-query"
 import Main from "./Main"
 

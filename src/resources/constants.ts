@@ -23,3 +23,25 @@ export const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_3BWgbta6u_Fg39SUrPGV2Q_l
 // =============================================================================
 
 export const SUPABASE_URL = "https://tkgpzqltyphafnwbusmc.supabase.co"
+export const OFF_API_URL = "https://world.openfoodfacts.org/api/v2"
+
+// =============================================================================
+// OTHERS
+// =============================================================================
+
+export const OFF_NUTRIMENTS_KEYS = {
+	calories: "energy-kcal",
+	protein: "protein",
+	fat: "fat",
+	saturated_fat: "saturated-fat",
+	monounsaturated_fat: "monounsaturated-fat",
+	polyunsaturated_fat: "polyunsaturated-fat",
+	trans_fat: "trans-fat",
+	carbohydrates: "carbohydrates",
+	total_sugars: "sugars",
+	added_sugars: "added-sugars",
+	fiber: "fiber",
+	sodium: "sodium",
+	potassium: "potassium",
+	cholesterol: "cholesterol",
+}

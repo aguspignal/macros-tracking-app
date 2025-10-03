@@ -6,7 +6,7 @@ import { theme } from "../../resources/theme"
 import { useHeaderHeight } from "@react-navigation/elements"
 import Button from "../../components/buttons/Button"
 import StyledText from "../../components/texts/StyledText"
-import TextButton from "../../components/TextButton"
+import TextButton from "../../components/buttons/TextButton"
 
 type Props = {
 	type: "signin" | "signup" | "recovery" | "updatepsw" | "otpcode"
@@ -72,7 +72,6 @@ export default function LoginLayout({
 					}
 					onPress={onSubmit}
 					isLoading={isLoading}
-					size="m"
 					style={styles.submitBtn}
 				/>
 
@@ -87,8 +86,8 @@ export default function LoginLayout({
 						<TextButton
 							onPress={handleNavigation}
 							title={type === "signin" ? "Sign up" : "Sign in"}
+							textType="boldText"
 							color="primary"
-							size="m"
 						/>
 					</View>
 				) : null}
@@ -100,7 +99,7 @@ export default function LoginLayout({
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: theme.colors.backgroundLight,
+		backgroundColor: theme.colors.backgroundBlack,
 		paddingHorizontal: theme.spacing.l,
 	},
 	subcontainer: {
@@ -108,6 +107,7 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		marginVertical: theme.spacing.m,
+		color: theme.colors.textLight,
 	},
 	submitBtn: {
 		marginVertical: theme.spacing.l,

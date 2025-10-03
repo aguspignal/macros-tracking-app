@@ -4,6 +4,7 @@ import { theme } from "../theme"
 export const navigationStyles = StyleSheet.create({
 	headerTitle: {
 		fontSize: theme.fontSize.l,
+		color: theme.colors.textLight,
 	},
 	headerBackground: {
 		backgroundColor: theme.colors.backgroundBlack,

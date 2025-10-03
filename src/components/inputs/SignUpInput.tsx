@@ -1,10 +1,10 @@
 import { Control, Controller, useController } from "react-hook-form"
 import { inputStyles } from "../../resources/styles/inputStyles"
 import { SignUpFormValues } from "../../types/forms"
-import { Text, TextInput, TouchableOpacity, View } from "react-native"
+import { TextInput, TouchableOpacity, View } from "react-native"
 import { useState } from "react"
-import { useTranslation } from "react-i18next"
 import MCIcon from "../icons/MCIcon"
+import StyledText from "../texts/StyledText"
 
 type Props = {
 	name: keyof SignUpFormValues
@@ -12,17 +12,11 @@ type Props = {
 }
 
 export default function SignUpInput({ name, control }: Props) {
-	const { t } = useTranslation()
 	const { field, fieldState } = useController({ name, control })
 
 	const [passwordVisible, setPasswordVisible] = useState(false)
 
-	const label =
-		name === "email"
-			? t("attributes.email")
-			: name === "password"
-			? t("attributes.password")
-			: t("actions.confirm-password")
+	const label = name === "email" ? "Email" : name === "password" ? "Password" : "Confirm password"
 
 	const iconName: React.ComponentProps<typeof MCIcon>["name"] =
 		name === "email" ? "email" : passwordVisible ? "eye-off-outline" : "eye"
@@ -40,7 +34,9 @@ export default function SignUpInput({ name, control }: Props) {
 
 	return (
 		<View style={inputStyles.inputContainer}>
-			<Text style={inputStyles.label}>{label}</Text>
+			<StyledText type="note" style={inputStyles.label}>
+				{label}
+			</StyledText>
 
 			<Controller
 				name={name}
@@ -72,7 +68,9 @@ export default function SignUpInput({ name, control }: Props) {
 			/>
 
 			{fieldState.error ? (
-				<Text style={inputStyles.errorMessage}>{fieldState.error.message}</Text>
+				<StyledText type="note" color="danger" style={inputStyles.errorMessage}>
+					{fieldState.error.message}
+				</StyledText>
 			) : null}
 		</View>
 	)
