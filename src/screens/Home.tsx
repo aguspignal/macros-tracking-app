@@ -1,12 +1,50 @@
-import { ScrollView, StyleSheet, View } from "react-native"
+import { FoodServingsNutrients, OpenFoodFactsParsedProduct, TimeOfDay } from "../types/foods"
 import { RootStackNavigationProp, TabScreenProps } from "../types/navigation"
+import { ScrollView, StyleSheet, View } from "react-native"
 import { theme } from "../resources/theme"
-import { TimeOfDay } from "../types/foods"
+import { useNavigation } from "@react-navigation/native"
 import Button from "../components/buttons/Button"
 import StyledText from "../components/texts/StyledText"
 import TimeOfDayCard from "../components/cards/TimeOfDayCard"
 import useSession from "../hooks/useSession"
-import { useNavigation } from "@react-navigation/native"
+
+const mockupFood: FoodServingsNutrients = {
+	food: {
+		id: -1,
+		barcode: "733480014000",
+		name: "Food name",
+		last_update: "",
+		user_id: null,
+		source: "off",
+	},
+	servings: [
+		{
+			id: -1,
+			food_id: -1,
+			is_grams: true,
+			serving_text: "1 Serving",
+			serving_weight: 100,
+		},
+	],
+	nutrients: {
+		id: -1,
+		food_id: -1,
+		calories: 0,
+		protein: 0,
+		fat: 0,
+		carbohydrates: 0,
+		fiber: 0,
+		total_sugars: 0,
+		sodium: 0,
+		added_sugars: 0,
+		cholesterol: 0,
+		potassium: 0,
+		monounsaturated_fat: 0,
+		polyunsaturated_fat: 0,
+		trans_fat: 0,
+		saturated_fat: 0,
+	},
+}
 
 export default function Home({ navigation }: TabScreenProps<"Home">) {
 	const { endSession } = useSession()
@@ -22,6 +60,11 @@ export default function Home({ navigation }: TabScreenProps<"Home">) {
 
 	return (
 		<ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+			<Button
+				title="See food page"
+				onPress={() => navigate("Food", { food: mockupFood, timeOfDay: "Lunch" })}
+			/>
+
 			<View style={styles.summaryContainer}>
 				<StyledText type="title" align="center">
 					2000 Calories

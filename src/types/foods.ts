@@ -1,7 +1,7 @@
 import { Database } from "./supabase"
 
 export type DatabaseFood = Database["public"]["Tables"]["Foods"]["Row"]
-export type DatabaseFoodNutrient = Database["public"]["Tables"]["FoodNutrients"]["Row"]
+export type DatabaseFoodNutrients = Database["public"]["Tables"]["FoodNutrients"]["Row"]
 export type DatabaseServing = Database["public"]["Tables"]["Servings"]["Row"]
 export type DatabaseInsertServing = Database["public"]["Tables"]["Servings"]["Insert"]
 
@@ -13,8 +13,9 @@ export type DatabaseMeal = Database["public"]["Tables"]["Meals"]["Row"]
 export type DatabaseMealFood = Database["public"]["Tables"]["MealFoods"]["Row"]
 
 export type TimeOfDay = Database["public"]["Enums"]["TimeOfDay"]
+export type FoodSource = Database["public"]["Enums"]["FoodSource"]
 
-export type Nutrients = Omit<DatabaseFoodNutrient, "id" | "food_id">
+export type Nutrients = Omit<DatabaseFoodNutrients, "id" | "food_id">
 export type BasicMacros = Pick<Nutrients, "calories" | "protein" | "fat" | "carbohydrates">
 
 export type FoodAndServings = {
@@ -25,10 +26,6 @@ export type FoodAndServings = {
 export type FoodEntry = FoodAndServings & {
 	macros: BasicMacros
 } & Pick<DatabaseFoodEntry, "serving_amount" | "time_day" | "entry_date">
-
-export type FoodServingNutrients = FoodAndServings & {
-	nutrients: Nutrients
-}
 
 export type OpenFoodFactsResponse = {
 	code: string
@@ -45,8 +42,18 @@ export type OpenFoodFactsResponse = {
 }
 
 export type OpenFoodFactsParsedProduct = {
+	id: number
 	barcode: string
 	name: string
 	nutrients: Nutrients
+	last_update: string
+	source: FoodSource
+	user_id: number | null
 	serving: DatabaseServing | null
+}
+
+export type FoodServingsNutrients = {
+	food: DatabaseFood
+	servings: DatabaseServing[]
+	nutrients: DatabaseFoodNutrients
 }

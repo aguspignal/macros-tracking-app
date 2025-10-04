@@ -5,7 +5,9 @@ import { RootStackParams } from "../types/navigation"
 import { TabsNavigator } from "./TabsNavigator"
 import { theme } from "../resources/theme"
 import { useEffect } from "react"
+import Food from "../screens/Food"
 import Loading from "../screens/Loading"
+import ScanBarcode from "../screens/ScanBarcode"
 import SearchFood from "../screens/SearchFood"
 import SearchFoodHeader from "../components/headers/SearchFoodHeader"
 import Settings from "../screens/Settings"
@@ -45,6 +47,7 @@ function RootNavigator() {
 			}}
 		>
 			<Stack.Screen name="Tabs" component={TabsNavigator} />
+			<Stack.Screen name="Settings" component={Settings} />
 			<Stack.Screen
 				name="SearchFood"
 				component={SearchFood}
@@ -54,7 +57,16 @@ function RootNavigator() {
 					),
 				}}
 			/>
-			<Stack.Screen name="Settings" component={Settings} />
+			<Stack.Screen name="ScanBarcode" component={ScanBarcode} />
+			<Stack.Screen
+				name="Food"
+				component={Food}
+				options={({ route }) => ({
+					headerTitle: route.params.timeOfDay
+						? `Add to ${route.params.timeOfDay}`
+						: "Add food",
+				})}
+			/>
 		</Stack.Navigator>
 	)
 }

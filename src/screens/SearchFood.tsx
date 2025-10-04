@@ -1,10 +1,9 @@
-import { inputStyles } from "../resources/styles/inputStyles"
 import { RootStackScreenProps } from "../types/navigation"
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { theme } from "../resources/theme"
 import { useState } from "react"
 import Button from "../components/buttons/Button"
-import MCIcon from "../components/icons/MCIcon"
+import Input from "../components/inputs/Input"
 import useFoodQuery from "../hooks/useFoodQuery"
 
 export default function SearchFood({ navigation, route }: RootStackScreenProps<"SearchFood">) {
@@ -16,27 +15,23 @@ export default function SearchFood({ navigation, route }: RootStackScreenProps<"
 		console.log(foodSearch)
 	}
 
+	function handleScanBarcode() {
+		navigation.navigate("ScanBarcode", { timeOfDay: route.params?.timeOfDay })
+	}
+
 	return (
 		<View style={styles.container}>
-			<View style={inputStyles.containerWithIcon}>
-				<TextInput
-					value={foodSearch}
-					onChangeText={setFoodSearch}
-					placeholder="Search for food..."
-					style={inputStyles.input}
-				/>
-
-				<TouchableOpacity
-					onPress={handleSearch}
-					activeOpacity={1}
-					style={inputStyles.rightIconContainer}
-				>
-					<MCIcon name="magnify" color="primary" style={inputStyles.rightIcon} />
-				</TouchableOpacity>
-			</View>
+			<Input
+				setValue={setFoodSearch}
+				value={foodSearch}
+				placeholder="Search food"
+				icon="magnify"
+				iconColor="primary"
+				onPressIcon={handleSearch}
+			/>
 
 			<Button
-				onPress={() => {}}
+				onPress={handleScanBarcode}
 				title="Scan barcode"
 				titleColor="textLight"
 				icon="barcode-scan"

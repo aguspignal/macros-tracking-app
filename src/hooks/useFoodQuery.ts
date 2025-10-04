@@ -11,7 +11,7 @@ import foodService from "../services/foodService"
 import { useUserStore } from "../stores/userStore"
 
 const QUERYKEY_ROOT = "foods"
-export const GETPRODUCTBYBARCODE_KEY = (bc: string) => [QUERYKEY_ROOT, "productByBarcode", bc]
+export const GETPRODUCTBYBARCODELAZY_KEY = (bc: string) => [QUERYKEY_ROOT, "productByBarcode", bc]
 export const GETFOODENTRIESBYUSERID_KEY = (uId: number) => [
 	QUERYKEY_ROOT,
 	"foodEntriesByUserId",
@@ -22,10 +22,11 @@ export const SEARCHFOODSBYNAME_KEY = (name: string) => [QUERYKEY_ROOT, "searchFo
 export default function useFoodQuery() {
 	const { user } = useUserStore()
 
-	function getProductByBarcode(barcode: string) {
+	function getProductByBarcodeLazy(barcode: string | undefined) {
 		return useQuery<OpenFoodFactsParsedProduct | null>({
-			queryKey: GETPRODUCTBYBARCODE_KEY(barcode),
+			queryKey: GETPRODUCTBYBARCODELAZY_KEY(barcode ?? ""),
 			queryFn: async () => {
+				console.log("hi")
 				if (!barcode) return null
 
 				const result = await foodService.fetchFoodFromOFFByBarcode(barcode)
@@ -37,6 +38,7 @@ export default function useFoodQuery() {
 
 				return parseProductFromOFFResponse(result as OpenFoodFactsResponse)
 			},
+			enabled: false,
 		})
 	}
 
@@ -85,7 +87,7 @@ export default function useFoodQuery() {
 
 	return {
 		getFoodEntriesByUserId,
-		getProductByBarcode,
+		getProductByBarcodeLazy,
 		searchFoodsByName,
 	}
 }

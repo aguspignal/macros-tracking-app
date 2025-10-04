@@ -44,9 +44,13 @@ export function parseProductFromOFFResponse(
 	if (!nutrients) return null
 
 	return {
+		id: -1,
 		barcode: code,
 		name,
 		nutrients,
+		last_update: "",
+		source: "off",
+		user_id: null,
 		serving,
 	}
 }
