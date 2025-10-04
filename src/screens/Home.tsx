@@ -1,17 +1,19 @@
-import { StyleSheet, View } from "react-native"
-import { TabScreenProps } from "../types/navigation"
+import { ScrollView, StyleSheet, View } from "react-native"
+import { RootStackNavigationProp, TabScreenProps } from "../types/navigation"
 import { theme } from "../resources/theme"
 import { TimeOfDay } from "../types/foods"
 import Button from "../components/buttons/Button"
 import StyledText from "../components/texts/StyledText"
 import TimeOfDayCard from "../components/cards/TimeOfDayCard"
 import useSession from "../hooks/useSession"
+import { useNavigation } from "@react-navigation/native"
 
 export default function Home({ navigation }: TabScreenProps<"Home">) {
 	const { endSession } = useSession()
+	const { navigate } = useNavigation<RootStackNavigationProp>()
 
 	function handleAddFood(timeOfDay: TimeOfDay) {
-		console.log(timeOfDay)
+		navigate("SearchFood", { timeOfDay })
 	}
 
 	function handleLogout() {
@@ -19,9 +21,11 @@ export default function Home({ navigation }: TabScreenProps<"Home">) {
 	}
 
 	return (
-		<View style={styles.container}>
+		<ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
 			<View style={styles.summaryContainer}>
-				<StyledText type="title">2000 Calories</StyledText>
+				<StyledText type="title" align="center">
+					2000 Calories
+				</StyledText>
 
 				<View style={styles.macrosWrapper}>
 					<View style={styles.macroContainer}>
@@ -48,23 +52,26 @@ export default function Home({ navigation }: TabScreenProps<"Home">) {
 
 			<Button title="Set goals" onPress={() => {}} />
 
-			<Button title="Logout" onPress={handleLogout} isBordered />
-		</View>
+			<Button title="Logout" color="textLight" onPress={handleLogout} isBordered />
+		</ScrollView>
 	)
 }
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
 		backgroundColor: theme.colors.backgroundBlack,
 		paddingHorizontal: theme.spacing.s,
+		paddingBottom: theme.spacing.xxl,
+		gap: theme.spacing.l,
 	},
 	summaryContainer: {
-		alignItems: "center",
+		gap: theme.spacing.xs,
 	},
 	macrosWrapper: {
 		flexDirection: "row",
 		alignItems: "center",
+		justifyContent: "center",
+		gap: theme.spacing.xxl,
 	},
 	macroContainer: {
 		alignItems: "center",

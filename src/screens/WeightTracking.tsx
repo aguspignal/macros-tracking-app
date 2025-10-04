@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native"
+import { theme } from "../resources/theme"
 
 export default function WeightTracking() {
 	return (
@@ -9,5 +10,8 @@ export default function WeightTracking() {
 }
 
 const styles = StyleSheet.create({
-	container: {},
+	container: {
+		flex: 1,
+		backgroundColor: theme.colors.backgroundBlack,
+	},
 })

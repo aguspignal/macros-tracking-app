@@ -25,7 +25,7 @@ export const navigationStyles = StyleSheet.create({
 	},
 	tabBar: {
 		height: theme.spacing.x3l + 4,
-		backgroundColor: theme.colors.backgroundGray,
+		backgroundColor: theme.colors.backgroundDark,
 	},
 	tabIconContainer: {
 		width: theme.fontSize.h3 + 4,

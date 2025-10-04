@@ -1,5 +1,5 @@
 import { PostgrestError } from "@supabase/supabase-js"
-import { FoodEntry, OpenFoodFactsResponse } from "../types/foods"
+import { FoodAndServings, FoodEntry, OpenFoodFactsResponse } from "../types/foods"
 import { supabase } from "../lib/supabase"
 import { OFF_API_URL } from "../resources/constants"
 
@@ -37,7 +37,7 @@ const foodService = {
 		const { error, data } = await supabase
 			.from("FoodEntries")
 			.select(
-				"serving_amount, time_day, entry_date, food:Foods(*, macros:FoodNutrients(calories, protein, fat, carbohydrates)), serving:Servings(*)",
+				"serving_amount, time_day, entry_date, food:Foods(*, macros:FoodNutrients(calories, protein, fat, carbohydrates)), servings:Servings(*)",
 			)
 			.eq("user_id", userId)
 			.gte("entry_date", dateFrom)
@@ -46,17 +46,41 @@ const foodService = {
 		if (error) return error
 
 		const entries = data.map((entry) => {
-			const { food, ...restEntry } = entry
+			const { food, servings, ...restEntry } = entry
 			const { macros, ...restFood } = food
 
 			return {
 				macros: macros[0],
 				food: restFood,
+				servings: [servings],
 				...restEntry,
 			}
 		})
 
 		return entries
+	},
+
+	async fetchFoodsByName({
+		foodName,
+		userId,
+	}: fetchFoodsByNameParams): Promise<FoodAndServings[] | PostgrestError> {
+		console.log("F-SERVICE: fetchFoodsByName")
+		const { error, data } = await supabase
+			.from("Foods")
+			.select("*, servings:Servings(*)")
+			// exclude where userId not null but != user.id
+			// .eq("user_id", userId)
+			.ilike("food_name", `%${foodName}%`)
+			.limit(20)
+
+		if (error) return error
+		return data.map((row) => {
+			const { servings, ...food } = row
+			return {
+				food,
+				servings,
+			}
+		})
 	},
 }
 
@@ -64,6 +88,11 @@ type fetchFoodEntriesByUserIdParams = {
 	userId: number
 	dateFrom: string
 	dateTo: string
+}
+
+type fetchFoodsByNameParams = {
+	foodName: string
+	userId: number | null
 }
 
 export default foodService

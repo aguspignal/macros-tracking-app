@@ -2,7 +2,9 @@ import { BottomTabNavigationOptions, createBottomTabNavigator } from "@react-nav
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationStyles } from "../resources/styles/navigationStyles"
 import { StatsTabParams, TabParams } from "../types/navigation"
+import { theme } from "../resources/theme"
 import Home from "../screens/Home"
+import HomeHeader from "../components/headers/HomeHeader"
 import MCIcon from "../components/icons/MCIcon"
 import NutrientsList from "../screens/NutrientsList"
 import Stats from "../screens/Stats"
@@ -14,13 +16,27 @@ const StatsTabs = createNativeStackNavigator<StatsTabParams>()
 export function TabsNavigator() {
 	return (
 		<Tabs.Navigator
-			screenOptions={{
-				headerShown: false,
-				tabBarHideOnKeyboard: true,
-				tabBarStyle: navigationStyles.tabBar,
+			screenOptions={({ route }) => {
+				return {
+					headerShadowVisible: false,
+					headerShown: route.name !== "StatsTab",
+					headerStyle: navigationStyles.headerBackground,
+					headerTintColor: theme.colors.textLight,
+					tabBarHideOnKeyboard: true,
+					tabBarIconStyle: navigationStyles.tabIconContainer,
+					tabBarShowLabel: false,
+					tabBarStyle: navigationStyles.tabBar,
+				}
 			}}
 		>
-			<Tabs.Screen name="Home" component={Home} options={handleTabOptions("home")} />
+			<Tabs.Screen
+				name="Home"
+				component={Home}
+				options={{
+					header: ({ navigation }) => <HomeHeader navigation={navigation} />,
+					...handleTabOptions("home"),
+				}}
+			/>
 			<Tabs.Screen
 				name="WeightTracking"
 				component={WeightTracking}
@@ -33,7 +49,13 @@ export function TabsNavigator() {
 
 function StatsTab() {
 	return (
-		<StatsTabs.Navigator>
+		<StatsTabs.Navigator
+			screenOptions={{
+				headerShadowVisible: false,
+				headerStyle: navigationStyles.headerBackground,
+				headerTintColor: theme.colors.textLight,
+			}}
+		>
 			<StatsTabs.Screen name="Stats" component={Stats} />
 			<StatsTabs.Screen name="NutrientsList" component={NutrientsList} />
 		</StatsTabs.Navigator>
@@ -50,9 +72,5 @@ function handleTabOptions(
 				style={[navigationStyles.tabIcon, focused ? navigationStyles.tabIconFocused : {}]}
 			/>
 		),
-		tabBarShowLabel: false,
-		tabBarIconStyle: navigationStyles.tabIconContainer,
-		headerStyle: navigationStyles.headerBackground,
-		headerShadowVisible: false,
 	}
 }

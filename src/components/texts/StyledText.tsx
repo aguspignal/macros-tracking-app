@@ -5,10 +5,17 @@ import { theme } from "../../resources/theme"
 type Props = {
 	type: TextType
 	color?: keyof typeof theme.colors
+	align?: "center" | "left" | "right"
 	style?: StyleProp<TextStyle>
 	children: React.ReactNode
 }
-export default function StyledText({ type, color = "textLight", style, children }: Props) {
+export default function StyledText({
+	type,
+	color = "textLight",
+	align = "left",
+	style,
+	children,
+}: Props) {
 	const fontSize =
 		type === "note" || type === "boldNote"
 			? theme.fontSize.xs
@@ -23,6 +30,7 @@ export default function StyledText({ type, color = "textLight", style, children 
 	const textStyle: StyleProp<TextStyle> = {
 		fontSize,
 		fontWeight,
+		textAlign: align,
 		color: theme.colors[color as keyof typeof theme.colors],
 	}
 

@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { theme } from "../resources/theme"
+import StyledText from "../components/texts/StyledText"
 
-export default function Stats() {
+export default function Settings() {
 	return (
 		<View style={styles.container}>
-			<Text>Stats</Text>
+			<StyledText type="text">Settings</StyledText>
 		</View>
 	)
 }

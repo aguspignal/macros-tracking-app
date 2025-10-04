@@ -17,16 +17,16 @@ export type TimeOfDay = Database["public"]["Enums"]["TimeOfDay"]
 export type Nutrients = Omit<DatabaseFoodNutrient, "id" | "food_id">
 export type BasicMacros = Pick<Nutrients, "calories" | "protein" | "fat" | "carbohydrates">
 
-export type FoodAndServing = {
+export type FoodAndServings = {
 	food: DatabaseFood
-	serving: DatabaseServing
+	servings: DatabaseServing[]
 }
 
-export type FoodEntry = FoodAndServing & {
+export type FoodEntry = FoodAndServings & {
 	macros: BasicMacros
 } & Pick<DatabaseFoodEntry, "serving_amount" | "time_day" | "entry_date">
 
-export type FoodServingNutrients = FoodAndServing & {
+export type FoodServingNutrients = FoodAndServings & {
 	nutrients: Nutrients
 }
 

@@ -6,9 +6,12 @@ import StyledText from "../texts/StyledText"
 type Props = {
 	title: string
 	onPress: () => void
-	size?: "s" | "m"
+	size?: "s" | "m" | "l"
 	color?: keyof typeof theme.colors
+	titleColor?: keyof typeof theme.colors
 	icon?: React.ComponentProps<typeof MCIcon>["name"]
+	iconDirection?: "left" | "right"
+	iconColor?: keyof typeof theme.colors
 	isDisabled?: boolean
 	isBordered?: boolean
 	isLoading?: boolean
@@ -21,7 +24,10 @@ export default function Button({
 	onPress,
 	size = "m",
 	color = "primary",
+	titleColor = "textDark",
 	icon,
+	iconDirection = "left",
+	iconColor,
 	isDisabled = false,
 	isBordered = false,
 	isLoading = false,
@@ -32,9 +38,10 @@ export default function Button({
 		? "grayDark"
 		: isBordered
 		? color
-		: "textDark"
+		: titleColor
 
-	const iconSize = size === "s" ? theme.fontSize.l : theme.fontSize.xl
+	const iconSize =
+		size === "s" ? theme.fontSize.l : size === "m" ? theme.fontSize.xl : theme.fontSize.h3
 
 	const paddingVertical = size === "s" ? theme.spacing.xxs : theme.spacing.xs
 
@@ -54,18 +61,18 @@ export default function Button({
 		alignItems: "center",
 		justifyContent: "center",
 		paddingVertical: paddingVertical,
-		paddingHorizontal: theme.spacing.m,
+		paddingHorizontal: size === "l" ? theme.spacing.l : theme.spacing.m,
 		backgroundColor: bgColor,
 		borderWidth: isDisabled ? 0 : isBordered ? 1 : 0,
 		borderColor: borderColor,
 		borderRadius: 80,
 		alignSelf: alignSelf ? "center" : "auto",
+		gap: theme.spacing.xs,
 	}
 
 	const iconStyles: StyleProp<TextStyle> = {
-		color: textColor,
+		color: theme.colors[iconColor as keyof typeof theme.colors] ?? textColor,
 		fontSize: iconSize,
-		marginRight: theme.spacing.xxs,
 	}
 
 	return isLoading ? (
@@ -79,10 +86,20 @@ export default function Button({
 			onPress={onPress}
 			disabled={isDisabled}
 		>
-			{icon === undefined ? null : <MCIcon name={icon} style={iconStyles} />}
-			<StyledText type={size === "s" ? "boldNote" : "boldText"} color={textColor}>
+			{iconDirection === "left" && icon !== undefined ? (
+				<MCIcon name={icon} style={iconStyles} />
+			) : null}
+
+			<StyledText
+				type={size === "s" ? "boldNote" : size === "m" ? "boldText" : "subtitle"}
+				color={textColor}
+			>
 				{title}
 			</StyledText>
+
+			{iconDirection === "right" && icon !== undefined ? (
+				<MCIcon name={icon} style={iconStyles} />
+			) : null}
 		</TouchableOpacity>
 	)
 }

@@ -22,6 +22,10 @@ export type RootStackParams = {
 		amount?: number
 		timeOfDay?: TimeOfDay
 	}
+	Settings: undefined
+	SearchFood: {
+		timeOfDay?: TimeOfDay
+	}
 }
 
 export type RootStackScreenProps<T extends keyof RootStackParams> = NativeStackScreenProps<

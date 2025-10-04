@@ -42,9 +42,11 @@ export default function FoodCard({ food, servingText, macros, onPressAdd, onPres
 				<StyledText type="text">{food.name}</StyledText>
 
 				<View style={styles.servingContainer}>
-					<MCIcon name="silverware-fork-knife" color="primary" />
+					<MCIcon name="silverware-fork-knife" color="primary" size="s" />
 
-					<StyledText type="text">{servingText}</StyledText>
+					<StyledText type="note" color="primary">
+						{servingText}
+					</StyledText>
 				</View>
 
 				{macros ? (
@@ -57,7 +59,7 @@ export default function FoodCard({ food, servingText, macros, onPressAdd, onPres
 			</View>
 
 			<View style={styles.kcalsAndAction}>
-				<StyledText type="subtitle" color="grayDark">
+				<StyledText type="boldText" color="grayDark">
 					000
 				</StyledText>
 
@@ -84,12 +86,16 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		backgroundColor: theme.colors.backgroundDark,
+		// backgroundColor: theme.colors.purple,
+		paddingVertical: theme.spacing.xs,
 	},
-	leftContainer: {},
+	leftContainer: {
+		gap: 4,
+	},
 	servingContainer: {
 		flexDirection: "row",
 		alignItems: "center",
+		gap: 4,
 	},
 	kcalsAndAction: {
 		flexDirection: "row",

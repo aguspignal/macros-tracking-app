@@ -14,9 +14,10 @@ export const inputStyles = StyleSheet.create({
 		fontSize: theme.fontSize.s,
 		paddingHorizontal: theme.spacing.s,
 		paddingVertical: theme.spacing.xs,
-		borderRadius: 6,
-		borderWidth: 1,
-		borderColor: theme.colors.grayLight,
+		borderRadius: theme.spacing.xxs,
+		// borderWidth: 1,
+		// borderColor: theme.colors.grayLight,
+		backgroundColor: theme.colors.backgroundGray,
 	},
 	errorMessage: {
 		marginTop: theme.spacing.xxs,
@@ -38,12 +39,12 @@ export const inputStyles = StyleSheet.create({
 	rightIconContainer: {
 		position: "absolute",
 		right: theme.spacing.s,
-		top: theme.spacing.xs,
+		top: theme.spacing.xs - 2,
 		zIndex: 1000,
 	},
 	rightIcon: {
-		fontSize: theme.fontSize.xl,
-		color: theme.colors.grayDark,
+		fontSize: theme.fontSize.xxl,
+		// color: theme.colors.grayDark,
 	},
 	inputAndBtnContainer: {
 		flexDirection: "row",

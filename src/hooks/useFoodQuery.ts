@@ -1,8 +1,14 @@
-import { FoodEntry, OpenFoodFactsParsedProduct, OpenFoodFactsResponse } from "../types/foods"
+import {
+	FoodAndServings,
+	FoodEntry,
+	OpenFoodFactsParsedProduct,
+	OpenFoodFactsResponse,
+} from "../types/foods"
 import { isPostgrestError, notifyPostgrestError } from "../utils/helpers/queriesHelpers"
 import { parseProductFromOFFResponse } from "../utils/helpers/foods"
 import { useQuery } from "@tanstack/react-query"
 import foodService from "../services/foodService"
+import { useUserStore } from "../stores/userStore"
 
 const QUERYKEY_ROOT = "foods"
 export const GETPRODUCTBYBARCODE_KEY = (bc: string) => [QUERYKEY_ROOT, "productByBarcode", bc]
@@ -11,8 +17,11 @@ export const GETFOODENTRIESBYUSERID_KEY = (uId: number) => [
 	"foodEntriesByUserId",
 	uId,
 ]
+export const SEARCHFOODSBYNAME_KEY = (name: string) => [QUERYKEY_ROOT, "searchFoodsByName", name]
 
 export default function useFoodQuery() {
+	const { user } = useUserStore()
+
 	function getProductByBarcode(barcode: string) {
 		return useQuery<OpenFoodFactsParsedProduct | null>({
 			queryKey: GETPRODUCTBYBARCODE_KEY(barcode),
@@ -53,9 +62,31 @@ export default function useFoodQuery() {
 		})
 	}
 
+	function searchFoodsByName(foodName: string) {
+		return useQuery<FoodAndServings[]>({
+			queryKey: SEARCHFOODSBYNAME_KEY(foodName),
+			queryFn: async () => {
+				if (!foodName) return []
+
+				const result = await foodService.fetchFoodsByName({
+					foodName,
+					userId: user?.id ?? null,
+				})
+
+				if (isPostgrestError(result)) {
+					notifyPostgrestError(result)
+					return []
+				}
+
+				return result
+			},
+		})
+	}
+
 	return {
 		getFoodEntriesByUserId,
 		getProductByBarcode,
+		searchFoodsByName,
 	}
 }
 

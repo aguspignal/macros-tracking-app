@@ -218,19 +218,36 @@ export type Database = {
         Row: {
           barcode: string
           id: number
+          last_update: string
           name: string
+          source: Database["public"]["Enums"]["FoodSource"]
+          user_id: number | null
         }
         Insert: {
           barcode: string
           id: number
+          last_update?: string
           name: string
+          source: Database["public"]["Enums"]["FoodSource"]
+          user_id?: number | null
         }
         Update: {
           barcode?: string
           id?: number
+          last_update?: string
           name?: string
+          source?: Database["public"]["Enums"]["FoodSource"]
+          user_id?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "Foods_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       MealFoods: {
         Row: {
@@ -418,6 +435,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      FoodSource: "usda" | "off" | "user"
       TimeOfDay: "Breakfast" | "Lunch" | "Snacks" | "Dinner"
     }
     CompositeTypes: {
@@ -549,6 +567,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      FoodSource: ["usda", "off", "user"],
       TimeOfDay: ["Breakfast", "Lunch", "Snacks", "Dinner"],
     },
   },

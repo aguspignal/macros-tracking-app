@@ -1,5 +1,5 @@
 import { FoodAndServing, TimeOfDay } from "../../types/foods"
-import { ScrollView, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import { theme } from "../../resources/theme"
 import { useState } from "react"
 import FoodCard from "./FoodCard"
@@ -32,41 +32,46 @@ export default function TimeOfDayCard({ timeOfDay, onPressAdd, foodsAndServings 
 	}
 
 	return (
-		<ScrollView style={styles.container}>
+		<View style={styles.container}>
 			<View style={[headerBackground, styles.rowContainer, styles.header]}>
 				<TouchableOpacity
 					onPress={toggleSummaryExpanded}
 					activeOpacity={0.9}
-					style={styles.rowContainer}
+					style={[styles.headerTitle, styles.rowContainer]}
 				>
 					<StyledText type="subtitle">{timeOfDay}</StyledText>
 
-					<MCIcon name="chevron-down" color="textLight" />
+					<MCIcon
+						name={isSummaryExpanded ? "chevron-up" : "chevron-down"}
+						color="textLight"
+						size="xxl"
+					/>
 				</TouchableOpacity>
 
-				<View style={styles.rowContainer}>
-					<StyledText type="subtitle">000</StyledText>
-
-					<TouchableOpacity onPress={() => onPressAdd(timeOfDay)} activeOpacity={0.8}>
-						<MCIcon name="plus-thick" color="primary" />
-					</TouchableOpacity>
-				</View>
+				<TouchableOpacity onPress={() => onPressAdd(timeOfDay)} activeOpacity={0.8}>
+					<MCIcon name="plus-thick" color="primary" size="xxl" />
+				</TouchableOpacity>
 			</View>
 
 			<View style={styles.summaryContainer}>
-				{!isSummaryExpanded ? (
-					<TouchableOpacity onPress={() => setIsSummaryExpanded(true)}>
-						<MacrosSummaryText />
-					</TouchableOpacity>
-				) : (
+				{!isSummaryExpanded ? null : (
 					<View style={styles.foodsContainer}>
 						{foodsAndServings?.map((fs) => (
 							<FoodCard food={fs.food} servingText={fs.serving.serving_text} />
 						))}
 					</View>
 				)}
+				<TouchableOpacity
+					onPress={toggleSummaryExpanded}
+					style={[
+						styles.macrosSummaryTextContianer,
+						isSummaryExpanded && foodsAndServings?.length ? styles.borderTop : null,
+					]}
+				>
+					<MacrosSummaryText kcal={123} />
+				</TouchableOpacity>
 			</View>
-		</ScrollView>
+		</View>
 	)
 }
 
@@ -75,17 +80,33 @@ const styles = StyleSheet.create({
 	rowContainer: {
 		flexDirection: "row",
 		alignItems: "center",
+		gap: 4,
 	},
 	header: {
+		borderTopStartRadius: theme.spacing.xs,
+		borderTopEndRadius: theme.spacing.xs,
 		justifyContent: "space-between",
+		paddingHorizontal: theme.spacing.s,
+		paddingVertical: theme.spacing.xs,
 	},
-	title: {
-		fontSize: theme.fontSize.l,
-		fontWeight: "600",
-		color: theme.colors.textLight,
+	headerTitle: {
+		flex: 1,
 	},
 	summaryContainer: {
 		backgroundColor: theme.colors.backgroundDark,
+		borderBottomStartRadius: theme.spacing.xs,
+		borderBottomEndRadius: theme.spacing.xs,
 	},
-	foodsContainer: {},
+	foodsContainer: {
+		paddingHorizontal: theme.spacing.s,
+	},
+	macrosSummaryTextContianer: {
+		justifyContent: "space-between",
+		paddingHorizontal: theme.spacing.s,
+		paddingVertical: theme.spacing.xs,
+	},
+	borderTop: {
+		borderTopWidth: 1,
+		borderColor: theme.colors.backgroundGray,
+	},
 })
