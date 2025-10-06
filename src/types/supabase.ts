@@ -101,27 +101,27 @@ export type Database = {
         Row: {
           entry_date: string
           food_id: number
-          food_serving_id: number
           id: number
           serving_amount: number
+          serving_id: number | null
           time_day: Database["public"]["Enums"]["TimeOfDay"]
           user_id: number
         }
         Insert: {
           entry_date: string
           food_id: number
-          food_serving_id: number
           id?: number
           serving_amount: number
+          serving_id?: number | null
           time_day: Database["public"]["Enums"]["TimeOfDay"]
           user_id: number
         }
         Update: {
           entry_date?: string
           food_id?: number
-          food_serving_id?: number
           id?: number
           serving_amount?: number
+          serving_id?: number | null
           time_day?: Database["public"]["Enums"]["TimeOfDay"]
           user_id?: number
         }
@@ -134,8 +134,8 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "FoodEntries_food_serving_id_fkey"
-            columns: ["food_serving_id"]
+            foreignKeyName: "FoodEntries_serving_id_fkey"
+            columns: ["serving_id"]
             isOneToOne: false
             referencedRelation: "Servings"
             referencedColumns: ["id"]
@@ -155,6 +155,7 @@ export type Database = {
           calories: number
           carbohydrates: number
           cholesterol: number
+          data_per_serving: boolean
           fat: number
           fiber: number
           food_id: number
@@ -173,6 +174,7 @@ export type Database = {
           calories: number
           carbohydrates: number
           cholesterol: number
+          data_per_serving?: boolean
           fat: number
           fiber: number
           food_id: number
@@ -191,6 +193,7 @@ export type Database = {
           calories?: number
           carbohydrates?: number
           cholesterol?: number
+          data_per_serving?: boolean
           fat?: number
           fiber?: number
           food_id?: number
@@ -208,7 +211,7 @@ export type Database = {
           {
             foreignKeyName: "FoodNutrients_food_id_fkey"
             columns: ["food_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "Foods"
             referencedColumns: ["id"]
           },
@@ -216,7 +219,7 @@ export type Database = {
       }
       Foods: {
         Row: {
-          barcode: string
+          barcode: string | null
           id: number
           last_update: string
           name: string
@@ -224,15 +227,15 @@ export type Database = {
           user_id: number | null
         }
         Insert: {
-          barcode: string
-          id: number
+          barcode?: string | null
+          id?: number
           last_update?: string
           name: string
           source: Database["public"]["Enums"]["FoodSource"]
           user_id?: number | null
         }
         Update: {
-          barcode?: string
+          barcode?: string | null
           id?: number
           last_update?: string
           name?: string
@@ -252,23 +255,23 @@ export type Database = {
       MealFoods: {
         Row: {
           food_id: number
-          food_serving_id: number
           id: number
           meal_id: number
+          serving_id: number
           seving_amount: number
         }
         Insert: {
           food_id: number
-          food_serving_id: number
           id?: number
           meal_id: number
+          serving_id: number
           seving_amount: number
         }
         Update: {
           food_id?: number
-          food_serving_id?: number
           id?: number
           meal_id?: number
+          serving_id?: number
           seving_amount?: number
         }
         Relationships: [
@@ -280,17 +283,17 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "MealFoods_food_serving_id_fkey"
-            columns: ["food_serving_id"]
-            isOneToOne: false
-            referencedRelation: "Servings"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "MealFoods_meal_id_fkey"
             columns: ["meal_id"]
             isOneToOne: false
             referencedRelation: "Meals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "MealFoods_serving_id_fkey"
+            columns: ["serving_id"]
+            isOneToOne: false
+            referencedRelation: "Servings"
             referencedColumns: ["id"]
           },
         ]

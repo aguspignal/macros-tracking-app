@@ -1,14 +1,19 @@
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 import { DatabaseUser } from "../types/user"
+import { FoodEntryMacros } from "../types/foods"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { FoodEntry } from "../types/foods"
 
 interface UserState {
 	user: DatabaseUser | null
-	foodEntries: FoodEntry[]
+	foodEntries: FoodEntryMacros[]
+
 	loadUser: (u: DatabaseUser | null) => void
-	loadFoodEntries: (fe: FoodEntry[]) => void
+	loadFoodEntries: (fe: FoodEntryMacros[]) => void
+
+	addOrUpdateFoodEntry: (fe: FoodEntryMacros) => void
+
+	deleteFoodEntry: (feId: number) => void
 }
 
 export const useUserStore = create<UserState>()(
@@ -18,6 +23,14 @@ export const useUserStore = create<UserState>()(
 			foodEntries: [],
 			loadUser: (u) => set({ user: u }),
 			loadFoodEntries: (fe) => set({ foodEntries: fe }),
+			addOrUpdateFoodEntry: (fe) =>
+				set({
+					foodEntries: get()
+						.foodEntries.filter((entry) => entry.entry.id !== fe.entry.id)
+						.concat(fe),
+				}),
+			deleteFoodEntry: (feId) =>
+				set({ foodEntries: get().foodEntries.filter((entry) => entry.entry.id !== feId) }),
 		}),
 		{
 			name: "user-store",

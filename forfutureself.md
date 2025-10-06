@@ -2,4 +2,6 @@
 
 # To implement
 
-    - queries and stuff
+    - edit entry
+
+    - post in db before going to food page after scan

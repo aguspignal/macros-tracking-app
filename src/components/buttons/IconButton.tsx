@@ -37,8 +37,7 @@ export default function IconButton({
 		borderWidth: isBordered ? 1 : 0,
 		borderColor: theme.colors[color as keyof typeof theme.colors],
 		borderRadius: 80,
-		width: size === "s" ? theme.spacing.xl : theme.spacing.xxl,
-		height: size === "s" ? theme.spacing.xl : theme.spacing.xxl,
+		padding: 4,
 	}
 
 	const iconColor = isDisabled
@@ -47,7 +46,7 @@ export default function IconButton({
 		? theme.colors[color as keyof typeof theme.colors]
 		: theme.colors.textLight
 
-	const iconSize = size === "s" ? theme.fontSize.m : theme.fontSize.l
+	const iconSize = size === "s" ? theme.fontSize.xxl : theme.fontSize.h3
 
 	const iconStyles: StyleProp<TextStyle> = {
 		color: iconColor,

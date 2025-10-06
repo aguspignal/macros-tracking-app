@@ -4,7 +4,7 @@ import StyledText from "../texts/StyledText"
 
 type Props = {
 	nutrientName: string
-	amount: number
+	amount: number | string | undefined
 	unit: string
 	isSubNutrient?: boolean
 }
@@ -15,13 +15,21 @@ export default function NutritionalInformationItem({
 	unit,
 	isSubNutrient = false,
 }: Props) {
+	const amountText = !amount
+		? "-"
+		: typeof amount === "number"
+		? `${amount.toFixed(1)} ${unit}`
+		: `${amount} ${unit}`
+
 	return (
 		<View style={[styles.container, isSubNutrient ? styles.subNutrient : null]}>
 			<StyledText type="text" color={isSubNutrient ? "grayDark" : "textLight"}>
 				{nutrientName}
 			</StyledText>
 
-			<StyledText type="boldText">{`${amount} ${unit}`}</StyledText>
+			<StyledText type="boldText" color={isSubNutrient ? "grayDark" : "textLight"}>
+				{amountText}
+			</StyledText>
 		</View>
 	)
 }

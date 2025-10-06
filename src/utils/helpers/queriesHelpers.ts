@@ -12,11 +12,8 @@ export function notifyIfRequestError(
 	if (!message) message = "Ups an error ocurred"
 
 	if (notifyIfNull && (response === undefined || response === null))
-		// ToastNotification({ title: message })
-		console.log(message)
-	if (isPostgrestError(response))
-		// ToastNotification({ title: i18next.t(parseSupabaseErrorToTranslation(response.code)) })
-		console.log(response)
+		ToastNotification({ title: message })
+	if (isPostgrestError(response)) ToastNotification({ title: response.code })
 }
 
 export function parseSupabaseErrorToTranslation(code: (string & {}) | undefined) {

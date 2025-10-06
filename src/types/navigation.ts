@@ -1,13 +1,7 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs"
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native"
-import {
-	DatabaseFood,
-	DatabaseServing,
-	FoodServingsNutrients,
-	OpenFoodFactsParsedProduct,
-	TimeOfDay,
-} from "./foods"
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack"
+import { FoodEntryMacros, OpenFoodFactsParsedProduct, TimeOfDay } from "./foods"
 
 export type AuthStackParams = {
 	Welcome: undefined
@@ -22,9 +16,14 @@ export type AuthStackScreenProps<T extends keyof AuthStackParams> = NativeStackS
 
 export type RootStackParams = {
 	Tabs: NavigatorScreenParams<TabParams>
-	Food: {
-		food: FoodServingsNutrients
-		timeOfDay: TimeOfDay | undefined
+	AddFood: {
+		food_id: number
+		isScannedProduct: boolean
+		offParsedFood?: OpenFoodFactsParsedProduct
+		timeOfDay?: TimeOfDay
+	}
+	EditFoodEntry: {
+		entry: FoodEntryMacros
 	}
 	Settings: undefined
 	SearchFood: {

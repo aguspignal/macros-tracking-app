@@ -1,75 +1,62 @@
-import { BasicMacros, DatabaseFood } from "../../types/foods"
+import { FoodEntryMacros } from "../../types/foods"
 import { RootStackNavigationProp } from "../../types/navigation"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { theme } from "../../resources/theme"
 import { useNavigation } from "@react-navigation/native"
-import { useState } from "react"
-import IconButton from "../buttons/IconButton"
 import MacrosSummaryText from "../texts/MacrosSummaryText"
 import MCIcon from "../icons/MCIcon"
 import StyledText from "../texts/StyledText"
 
 type Props = {
-	food: DatabaseFood
-	servingText: string
-	macros?: BasicMacros
-	onPressAdd?: () => void
+	entry: FoodEntryMacros
+	showMacros?: boolean
 	onPressTrash?: () => void
 }
 
-export default function FoodCard({ food, servingText, macros, onPressAdd, onPressTrash }: Props) {
+export default function FoodEntryCard({ entry, showMacros = false, onPressTrash }: Props) {
+	const {
+		foodName,
+		macros,
+		servingText,
+		entry: { food_id, serving_amount, time_day },
+	} = entry
 	const nav = useNavigation<RootStackNavigationProp>()
 
-	const [isFoodSelected, setIsFoodSelected] = useState(false)
-
-	function handleSelectFood() {
-		if (!onPressAdd || isFoodSelected) {
-			setIsFoodSelected(false)
-			return
-		}
-
-		setIsFoodSelected(true)
-		onPressAdd()
-	}
+	const servingDisplayText = servingText
+		? `${serving_amount} x ${servingText}`
+		: `${serving_amount} g`
 
 	function navToFood() {
-		// nav.navigate("Food",)
+		nav.navigate("EditFoodEntry", { entry })
 	}
 
 	return (
 		<TouchableOpacity onPress={navToFood} style={styles.container}>
 			<View style={styles.leftContainer}>
-				<StyledText type="text">{food.name}</StyledText>
+				<StyledText type="text">{foodName}</StyledText>
 
-				<View style={styles.servingContainer}>
-					<MCIcon name="silverware-fork-knife" color="primary" size="s" />
-
-					<StyledText type="note" color="primary">
-						{servingText}
-					</StyledText>
-				</View>
-
-				{macros ? (
+				{macros && showMacros ? (
 					<MacrosSummaryText
 						protein={macros.protein}
 						fat={macros.fat}
 						carbs={macros.carbohydrates}
+						textType="note"
 					/>
 				) : null}
+
+				<View style={styles.servingContainer}>
+					<MCIcon name="silverware-fork-knife" color="primary" size="s" />
+
+					<StyledText type="boldNote" color="primary">
+						{servingDisplayText}
+					</StyledText>
+				</View>
 			</View>
 
 			<View style={styles.kcalsAndAction}>
 				<StyledText type="boldText" color="grayDark">
-					000
+					{macros?.calories.toFixed(0) ?? 0}
 				</StyledText>
-
-				{onPressAdd ? (
-					<IconButton
-						icon="plus"
-						onPress={handleSelectFood}
-						isBordered={!isFoodSelected}
-					/>
-				) : null}
 
 				{onPressTrash ? (
 					<TouchableOpacity onPress={onPressTrash}>
@@ -86,7 +73,6 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		// backgroundColor: theme.colors.purple,
 		paddingVertical: theme.spacing.xs,
 	},
 	leftContainer: {

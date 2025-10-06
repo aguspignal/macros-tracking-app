@@ -23,9 +23,23 @@ export type FoodAndServings = {
 	servings: DatabaseServing[]
 }
 
-export type FoodEntry = FoodAndServings & {
+export type FoodBasicMacros = {
+	food: DatabaseFood
 	macros: BasicMacros
-} & Pick<DatabaseFoodEntry, "serving_amount" | "time_day" | "entry_date">
+}
+
+export type FoodServingsNutrients = {
+	food: DatabaseFood
+	servings: DatabaseServing[]
+	nutrients: DatabaseFoodNutrients | null
+}
+
+export type FoodEntryMacros = {
+	entry: DatabaseFoodEntry
+	foodName: string
+	servingText: string | null
+	macros: BasicMacros | null
+}
 
 export type OpenFoodFactsResponse = {
 	code: string
@@ -36,6 +50,7 @@ export type OpenFoodFactsResponse = {
 	serving_quantity: string | number
 	serving_quantity_unit: string
 	serving_size: string
+	last_modified: string
 	nutriments: {
 		[key: string]: unknown
 	}
@@ -50,10 +65,5 @@ export type OpenFoodFactsParsedProduct = {
 	source: FoodSource
 	user_id: number | null
 	serving: DatabaseServing | null
-}
-
-export type FoodServingsNutrients = {
-	food: DatabaseFood
-	servings: DatabaseServing[]
-	nutrients: DatabaseFoodNutrients
+	dataPer: "100g" | "serving"
 }

@@ -7,6 +7,38 @@ import {
 import { isStringValid, parseBrands } from "./parsing"
 import { OFF_NUTRIMENTS_KEYS } from "../../resources/constants"
 
+export function calculateNutrientPerServingAmount(
+	amount: number | undefined,
+	nutrientValue: number,
+	isCustom: boolean,
+): number {
+	if (!amount) return nutrientValue
+	return isCustom ? (nutrientValue * amount) / 100 : nutrientValue * amount
+}
+
+export function calculateNutrientsPerServing(
+	nutrients: Nutrients,
+	servingWeight: number,
+): Nutrients {
+	return {
+		calories: (servingWeight * nutrients.calories) / 100,
+		protein: (servingWeight * nutrients.protein) / 100,
+		fat: (servingWeight * nutrients.fat) / 100,
+		saturated_fat: (servingWeight * nutrients.saturated_fat) / 100,
+		monounsaturated_fat: (servingWeight * nutrients.monounsaturated_fat) / 100,
+		polyunsaturated_fat: (servingWeight * nutrients.polyunsaturated_fat) / 100,
+		trans_fat: (servingWeight * nutrients.trans_fat) / 100,
+		carbohydrates: (servingWeight * nutrients.carbohydrates) / 100,
+		total_sugars: (servingWeight * nutrients.total_sugars) / 100,
+		added_sugars: (servingWeight * nutrients.added_sugars) / 100,
+		fiber: (servingWeight * nutrients.fiber) / 100,
+		sodium: (servingWeight * nutrients.sodium) / 100,
+		potassium: (servingWeight * nutrients.potassium) / 100,
+		cholesterol: (servingWeight * nutrients.cholesterol) / 100,
+		data_per_serving: true,
+	}
+}
+
 export function parseProductFromOFFResponse(
 	product: OpenFoodFactsResponse,
 ): OpenFoodFactsParsedProduct | null {
@@ -20,6 +52,7 @@ export function parseProductFromOFFResponse(
 		serving_quantity_unit,
 		nutrition_data_per,
 		nutriments,
+		last_modified,
 	} = product
 
 	if (!code || code.length <= 0) return null
@@ -33,130 +66,81 @@ export function parseProductFromOFFResponse(
 		serving_quantity_unit,
 		nutrition_data_per,
 	)
-	const needDataPer = !serving ? "100g" : serving.serving_weight ? "100g" : "serving"
 
-	const nutrients = extractNutrimentsFromOFFResponse(
-		nutriments,
-		!!serving,
-		!!serving?.serving_weight,
-	)
+	// collect data per 100g if: no serving || serving and weight
+	// collect data per serving if: serving but no weight || serving and weight but no data per 100g
 
+	let nutrientsPer100g: Nutrients | null = null
+	let nutrientsPerServing: Nutrients | null = null
+
+	if (!serving || (serving && serving.serving_weight)) {
+		nutrientsPer100g = extractNutrients(nutriments, "100g")
+	}
+
+	if (!serving && !nutrientsPer100g) return null
+
+	if (
+		(serving && !serving.serving_weight) ||
+		(serving && serving.serving_weight && !nutrientsPer100g)
+	) {
+		nutrientsPerServing = extractNutrients(nutriments, "serving")
+	}
+
+	if (serving && !serving.serving_weight && !nutrientsPerServing) return null
+
+	let nutrients = nutrientsPer100g ?? nutrientsPerServing
 	if (!nutrients) return null
 
 	return {
 		id: -1,
 		barcode: code,
 		name,
+		serving,
 		nutrients,
-		last_update: "",
+		last_update: last_modified,
 		source: "off",
 		user_id: null,
-		serving,
+		dataPer: nutrientsPer100g ? "100g" : "serving",
 	}
 }
 
-export function extractNutrimentsFromOFFResponse(
-	nutriments: {
-		[key: string]: unknown
-	},
-	thereIsServing: boolean,
-	thereIsWeight: boolean,
-): Nutrients | null {
-	const calories = getNutrients(
-		nutriments,
-		OFF_NUTRIMENTS_KEYS.calories,
-		thereIsServing,
-		thereIsWeight,
-	)
-
-	const protein =
-		getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.protein, thereIsServing, thereIsWeight) ?? 0
-	const carbohydrates =
-		getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.calories, thereIsServing, thereIsWeight) ?? 0
+function extractNutrients(
+	nutriments: { [key: string]: unknown },
+	extractPer: "100g" | "serving",
+): Nutrients {
+	let calories = getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.calories, extractPer)
+	const protein = getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.protein, extractPer) ?? 0
+	let fat = getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.fat, extractPer)
 	const saturated_fat =
-		getNutrients(
-			nutriments,
-			OFF_NUTRIMENTS_KEYS.saturated_fat,
-			thereIsServing,
-			thereIsWeight,
-		) ?? 0
+		getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.saturated_fat, extractPer) ?? 0
 	const monounsaturated_fat =
-		getNutrients(
-			nutriments,
-			OFF_NUTRIMENTS_KEYS.monounsaturated_fat,
-			thereIsServing,
-			thereIsWeight,
-		) ?? 0
+		getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.monounsaturated_fat, extractPer) ?? 0
 	const polyunsaturated_fat =
-		getNutrients(
-			nutriments,
-			OFF_NUTRIMENTS_KEYS.polyunsaturated_fat,
-			thereIsServing,
-			thereIsWeight,
-		) ?? 0
-	const trans_fat =
-		getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.trans_fat, thereIsServing, thereIsWeight) ?? 0
+		getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.polyunsaturated_fat, extractPer) ?? 0
+	const trans_fat = getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.trans_fat, extractPer) ?? 0
+	let carbohydrates = getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.carbohydrates, extractPer)
+	const total_sugars = getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.total_sugars, extractPer) ?? 0
+	const added_sugars = getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.added_sugars, extractPer) ?? 0
 
-	let fat = getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.fat, thereIsServing, thereIsWeight)
 	fat = fat ? fat : saturated_fat + monounsaturated_fat + polyunsaturated_fat + trans_fat
+	carbohydrates = carbohydrates ? carbohydrates : total_sugars + added_sugars
 
 	return {
 		calories: calories ? calories : protein * 4 + fat * 9 + carbohydrates * 4,
-		protein: protein,
+		protein,
 		fat,
 		saturated_fat,
-		polyunsaturated_fat,
 		monounsaturated_fat,
+		polyunsaturated_fat,
 		trans_fat,
-		carbohydrates: carbohydrates,
-		total_sugars:
-			getNutrients(
-				nutriments,
-				OFF_NUTRIMENTS_KEYS.total_sugars,
-
-				thereIsServing,
-				thereIsWeight,
-			) ?? 0,
-		added_sugars:
-			getNutrients(
-				nutriments,
-				OFF_NUTRIMENTS_KEYS.added_sugars,
-
-				thereIsServing,
-				thereIsWeight,
-			) ?? 0,
-		fiber:
-			getNutrients(
-				nutriments,
-				OFF_NUTRIMENTS_KEYS.fiber,
-
-				thereIsServing,
-				thereIsWeight,
-			) ?? 0,
-		sodium:
-			getNutrients(
-				nutriments,
-				OFF_NUTRIMENTS_KEYS.sodium,
-
-				thereIsServing,
-				thereIsWeight,
-			) ?? 0,
-		potassium:
-			getNutrients(
-				nutriments,
-				OFF_NUTRIMENTS_KEYS.potassium,
-
-				thereIsServing,
-				thereIsWeight,
-			) ?? 0,
-		cholesterol:
-			getNutrients(
-				nutriments,
-				OFF_NUTRIMENTS_KEYS.cholesterol,
-
-				thereIsServing,
-				thereIsWeight,
-			) ?? 0,
+		carbohydrates,
+		total_sugars,
+		added_sugars,
+		fiber: getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.fiber, extractPer) ?? 0,
+		sodium: getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.sodium, extractPer) ?? 0,
+		potassium: getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.potassium, extractPer) ?? 0,
+		cholesterol: getNutrients(nutriments, OFF_NUTRIMENTS_KEYS.cholesterol, extractPer) ?? 0,
+		data_per_serving: extractPer === "serving",
 	}
 }
 
@@ -182,15 +166,11 @@ function extractServing(
 	dataPer: string,
 ): DatabaseServing | null {
 	const serving_text = isStringValid(serving_size) ? serving_size.trim() : null
-	// : dataPer === "100g"
-	// ? "100g"
-	// : dataPer === "100ml"
-	// ? "100ml"
 	// : "100g"
 	if (!serving_text) return null
 
 	const serving_weight = isStringValid(serving_quantity) ? Number(serving_quantity) : null
-	// : dataPer === "100g" || dataPer === "100ml"
+	// : dataPer === "100g"
 	// ? 100
 	// : null
 
@@ -212,46 +192,10 @@ function getNutrients(
 		[key: string]: unknown
 	},
 	nutrientKey: string,
-	thereIsServing: boolean,
-	thereIsWeight: boolean,
-	// ): { value: number; dataPer: "100g" | "serving" } | null {
+	extractPer: "100g" | "serving",
 ): number | null {
-	var value
-	if (!thereIsServing) {
-		value = nutriments[`${nutrientKey}_100g`]
-		if (typeof value === "number") return value
+	const value = nutriments[`${nutrientKey}_${extractPer}`]
 
-		return null
-	}
-
-	if (!thereIsWeight) {
-		value = nutriments[`${nutrientKey}_serving`]
-		if (typeof value === "number") return value
-
-		return null
-	}
-
-	value = nutriments[`${nutrientKey}_100g`]
 	if (typeof value === "number") return value
-
-	value = nutriments[`${nutrientKey}_serving`]
-	if (typeof value === "number") return value
-
 	return null
 }
-
-// function getNutrients(
-// 	nutriments: {
-// 		[key: string]: unknown
-// 	},
-// 	nutrientKey: string,
-// 	dataPer: string,
-// ): number | null {
-// 	if (dataPer === "100g") {
-// 		return (nutriments[`${nutrientKey}_100g`] as number) ?? null
-// 	}
-// 	if (dataPer === "serving") {
-// 		return (nutriments[`${nutrientKey}_serving`] as number) ?? null
-// 	}
-// 	return null
-// }

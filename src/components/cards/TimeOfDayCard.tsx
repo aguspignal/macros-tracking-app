@@ -1,8 +1,9 @@
-import { FoodAndServing, TimeOfDay } from "../../types/foods"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import { theme } from "../../resources/theme"
-import { useState } from "react"
-import FoodCard from "./FoodCard"
+import { TimeOfDay } from "../../types/foods"
+import { useEffect, useState } from "react"
+import { useUserStore } from "../../stores/userStore"
+import FoodEntryCard from "./FoodEntryCard"
 import MacrosSummaryText from "../texts/MacrosSummaryText"
 import MCIcon from "../icons/MCIcon"
 import StyledText from "../texts/StyledText"
@@ -10,10 +11,11 @@ import StyledText from "../texts/StyledText"
 type Props = {
 	timeOfDay: TimeOfDay
 	onPressAdd: (timeOfDay: TimeOfDay) => void
-	foodsAndServings?: FoodAndServing[]
 }
 
-export default function TimeOfDayCard({ timeOfDay, onPressAdd, foodsAndServings }: Props) {
+export default function TimeOfDayCard({ timeOfDay, onPressAdd }: Props) {
+	const { foodEntries } = useUserStore()
+
 	const headerBackground: StyleProp<ViewStyle> = {
 		backgroundColor:
 			timeOfDay === "Breakfast"
@@ -24,6 +26,19 @@ export default function TimeOfDayCard({ timeOfDay, onPressAdd, foodsAndServings 
 				? theme.colors.darkGreen
 				: theme.colors.purple,
 	}
+
+	let totalCalories = foodEntries
+		.filter((fe) => fe.entry.time_day === timeOfDay)
+		.reduce((sum, fe) => sum + (fe.macros?.calories ?? 0), 0)
+	let totalProtein = foodEntries
+		.filter((fe) => fe.entry.time_day === timeOfDay)
+		.reduce((sum, fe) => sum + (fe.macros?.protein ?? 0), 0)
+	let totalFat = foodEntries
+		.filter((fe) => fe.entry.time_day === timeOfDay)
+		.reduce((sum, fe) => sum + (fe.macros?.fat ?? 0), 0)
+	let totalCarbs = foodEntries
+		.filter((fe) => fe.entry.time_day === timeOfDay)
+		.reduce((sum, fe) => sum + (fe.macros?.carbohydrates ?? 0), 0)
 
 	const [isSummaryExpanded, setIsSummaryExpanded] = useState(false)
 
@@ -54,21 +69,28 @@ export default function TimeOfDayCard({ timeOfDay, onPressAdd, foodsAndServings 
 			</View>
 
 			<View style={styles.summaryContainer}>
-				{!isSummaryExpanded ? null : (
+				{isSummaryExpanded ? (
 					<View style={styles.foodsContainer}>
-						{foodsAndServings?.map((fs) => (
-							<FoodCard food={fs.food} servingText={fs.serving.serving_text} />
-						))}
+						{foodEntries
+							.filter((fe) => fe.entry.time_day === timeOfDay)
+							.map((fe) => (
+								<FoodEntryCard entry={fe} key={fe.entry.id} />
+							))}
 					</View>
-				)}
+				) : null}
+
 				<TouchableOpacity
 					onPress={toggleSummaryExpanded}
 					style={[
 						styles.macrosSummaryTextContianer,
-						isSummaryExpanded && foodsAndServings?.length ? styles.borderTop : null,
+						isSummaryExpanded && foodEntries?.length ? styles.borderTop : null,
 					]}
 				>
-					<MacrosSummaryText kcal={123} />
+					<MacrosSummaryText protein={totalProtein} fat={totalFat} carbs={totalCarbs} />
+
+					<StyledText type="boldText" color="grayDark">
+						{totalCalories.toFixed(0)}
+					</StyledText>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -100,7 +122,12 @@ const styles = StyleSheet.create({
 	foodsContainer: {
 		paddingHorizontal: theme.spacing.s,
 	},
+	noFoodsContainer: {
+		paddingVertical: theme.spacing.xxs,
+	},
 	macrosSummaryTextContianer: {
+		flexDirection: "row",
+		alignItems: "center",
 		justifyContent: "space-between",
 		paddingHorizontal: theme.spacing.s,
 		paddingVertical: theme.spacing.xs,

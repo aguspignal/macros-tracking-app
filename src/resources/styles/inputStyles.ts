@@ -15,8 +15,6 @@ export const inputStyles = StyleSheet.create({
 		paddingHorizontal: theme.spacing.s,
 		paddingVertical: theme.spacing.xs,
 		borderRadius: theme.spacing.xxs,
-		// borderWidth: 1,
-		// borderColor: theme.colors.grayLight,
 		backgroundColor: theme.colors.backgroundGray,
 	},
 	errorMessage: {

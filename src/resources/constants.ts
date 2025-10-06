@@ -31,7 +31,7 @@ export const OFF_API_URL = "https://world.openfoodfacts.org/api/v2"
 
 export const OFF_NUTRIMENTS_KEYS = {
 	calories: "energy-kcal",
-	protein: "protein",
+	protein: "proteins",
 	fat: "fat",
 	saturated_fat: "saturated-fat",
 	monounsaturated_fat: "monounsaturated-fat",

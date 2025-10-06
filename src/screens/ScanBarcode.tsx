@@ -1,47 +1,52 @@
-import { StyleSheet, View } from "react-native"
 import { BarcodeScanningResult, CameraView, useCameraPermissions } from "expo-camera"
 import { RootStackScreenProps } from "../types/navigation"
+import { StyleSheet, View } from "react-native"
 import { theme } from "../resources/theme"
+import { useEffect, useState } from "react"
 import Button from "../components/buttons/Button"
 import Loading from "./Loading"
 import StyledText from "../components/texts/StyledText"
 import useFoodQuery from "../hooks/useFoodQuery"
-import { useEffect, useState } from "react"
-import { FoodServingsNutrients } from "../types/foods"
 
 export default function ScanBarcode({ navigation, route }: RootStackScreenProps<"ScanBarcode">) {
 	const { getProductByBarcodeLazy } = useFoodQuery()
 	const [permission, requestPermission] = useCameraPermissions()
 
 	const [scannedBarcode, setScannedBarcode] = useState<string | undefined>(undefined)
-	const { isPending, data: fetchedProduct, refetch: fetchProduct } = getProductByBarcodeLazy(
-		scannedBarcode,
-	)
+	const {
+		isFetching,
+		isLoading,
+		data: scannedProduct,
+		refetch: fetchProduct,
+	} = getProductByBarcodeLazy(scannedBarcode)
 
 	function handleBarCodeScanned(scanResult: BarcodeScanningResult) {
-		console.log(scanResult.data)
 		setScannedBarcode(scanResult.data)
 		fetchProduct()
 	}
 
 	useEffect(() => {
-		if (fetchedProduct) {
-			const { serving, nutrients, ...rest } = fetchedProduct
-			const food: FoodServingsNutrients = {
-				food: rest,
-				servings: serving ? [serving] : [],
-				nutrients: {
-					id: -1,
-					food_id: -1,
-					...nutrients,
-				},
+		if (scannedProduct) {
+			const { product, source } = scannedProduct
+
+			if (source === "db") {
+				navigation.replace("AddFood", {
+					food_id: product.food.id,
+					isScannedProduct: false,
+					timeOfDay: route.params.timeOfDay,
+				})
+			} else {
+				navigation.replace("AddFood", {
+					food_id: product.id,
+					isScannedProduct: true,
+					offParsedFood: product,
+					timeOfDay: route.params.timeOfDay,
+				})
 			}
-
-			navigation.replace("Food", { food, timeOfDay: route.params?.timeOfDay })
 		}
-	}, [fetchedProduct])
+	}, [scannedProduct])
 
-	if (!permission) return <Loading />
+	if (!permission || isFetching || isLoading) return <Loading />
 
 	if (!permission.granted)
 		return (
