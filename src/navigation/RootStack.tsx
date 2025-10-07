@@ -14,6 +14,7 @@ import SearchFoodHeader from "../components/headers/SearchFoodHeader"
 import Settings from "../screens/Settings"
 import useUserQuery, { GETINITIALDATA_KEY } from "../hooks/useUserQuery"
 import EditFoodEntry from "../screens/EditFoodEntry"
+import CreateFood from "../screens/CreateFood"
 
 const Stack = createNativeStackNavigator<RootStackParams>()
 
@@ -80,6 +81,12 @@ function RootNavigator() {
 				name="EditFoodEntry"
 				component={EditFoodEntry}
 				options={{ headerTitle: "Edit food entry" }}
+			/>
+
+			<Stack.Screen
+				name="CreateFood"
+				component={CreateFood}
+				options={{ headerTitle: "Create a new food" }}
 			/>
 		</Stack.Navigator>
 	)

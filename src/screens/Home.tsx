@@ -6,33 +6,40 @@ import { useNavigation } from "@react-navigation/native"
 import Button from "../components/buttons/Button"
 import StyledText from "../components/texts/StyledText"
 import TimeOfDayCard from "../components/cards/TimeOfDayCard"
+import { useUserStore } from "../stores/userStore"
 
 export default function Home({}: TabScreenProps<"Home">) {
+	const { foodEntries } = useUserStore()
 	const { navigate } = useNavigation<RootStackNavigationProp>()
 
 	function handleAddFood(timeOfDay: TimeOfDay) {
 		navigate("SearchFood", { timeOfDay })
 	}
 
+	let totalCalories = foodEntries.reduce((sum, fe) => sum + (fe.macros?.calories ?? 0), 0)
+	let totalProtein = foodEntries.reduce((sum, fe) => sum + (fe.macros?.protein ?? 0), 0)
+	let totalFat = foodEntries.reduce((sum, fe) => sum + (fe.macros?.fat ?? 0), 0)
+	let totalCarbs = foodEntries.reduce((sum, fe) => sum + (fe.macros?.carbohydrates ?? 0), 0)
+
 	return (
 		<ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
 			<View style={styles.summaryContainer}>
 				<StyledText type="title" align="center">
-					2000 Calories
+					{`${totalCalories.toFixed(0)} Calories`}
 				</StyledText>
 
 				<View style={styles.macrosWrapper}>
 					<View style={styles.macroContainer}>
 						<StyledText type="subtitle">Protein</StyledText>
-						<StyledText type="subtitle">115g</StyledText>
+						<StyledText type="subtitle">{totalProtein.toFixed(1) + " g"}</StyledText>
 					</View>
 					<View style={styles.macroContainer}>
 						<StyledText type="subtitle">Fat</StyledText>
-						<StyledText type="subtitle">43g</StyledText>
+						<StyledText type="subtitle">{totalFat.toFixed(1) + " g"}</StyledText>
 					</View>
 					<View style={styles.macroContainer}>
 						<StyledText type="subtitle">Carbs</StyledText>
-						<StyledText type="subtitle">148g</StyledText>
+						<StyledText type="subtitle">{totalCarbs.toFixed(1) + " g"}</StyledText>
 					</View>
 				</View>
 			</View>

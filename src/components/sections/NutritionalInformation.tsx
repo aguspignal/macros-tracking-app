@@ -1,7 +1,7 @@
 import { DatabaseServing, Nutrients } from "../../types/foods"
 import { StyleSheet, View } from "react-native"
 import { theme } from "../../resources/theme"
-import NutritionalInformationItem from "./NutritionalInformationItem"
+import NutritionalInformationItem from "../cards/NutritionalInformationItem"
 import StyledText from "../texts/StyledText"
 
 type Props = {

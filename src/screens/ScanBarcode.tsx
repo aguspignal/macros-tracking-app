@@ -13,6 +13,7 @@ export default function ScanBarcode({ navigation, route }: RootStackScreenProps<
 	const [permission, requestPermission] = useCameraPermissions()
 
 	const [scannedBarcode, setScannedBarcode] = useState<string | undefined>(undefined)
+
 	const {
 		isFetching,
 		isLoading,
@@ -26,23 +27,23 @@ export default function ScanBarcode({ navigation, route }: RootStackScreenProps<
 	}
 
 	useEffect(() => {
-		if (scannedProduct) {
-			const { product, source } = scannedProduct
+		if (!scannedProduct) return
 
-			if (source === "db") {
-				navigation.replace("AddFood", {
-					food_id: product.food.id,
-					isScannedProduct: false,
-					timeOfDay: route.params.timeOfDay,
-				})
-			} else {
-				navigation.replace("AddFood", {
-					food_id: product.id,
-					isScannedProduct: true,
-					offParsedFood: product,
-					timeOfDay: route.params.timeOfDay,
-				})
-			}
+		const { product, source } = scannedProduct
+
+		if (source === "db") {
+			navigation.replace("AddFood", {
+				food_id: product.food.id,
+				isScannedProduct: false,
+				timeOfDay: route.params.timeOfDay,
+			})
+		} else {
+			navigation.replace("AddFood", {
+				food_id: product.id,
+				isScannedProduct: true,
+				offParsedFood: product,
+				timeOfDay: route.params.timeOfDay,
+			})
 		}
 	}, [scannedProduct])
 

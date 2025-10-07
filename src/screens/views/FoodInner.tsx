@@ -13,7 +13,7 @@ import DropdownMenu from "../../components/dropdowns/DropdownMenu"
 import Input from "../../components/inputs/Input"
 import MacrosSummaryCard from "../../components/cards/MacrosSummaryCard"
 import MCIcon from "../../components/icons/MCIcon"
-import NutritionalInformation from "../../components/cards/NutritionalInformation"
+import NutritionalInformation from "../../components/sections/NutritionalInformation"
 import StyledText from "../../components/texts/StyledText"
 import ToastNotification from "../../components/notifications/ToastNotification"
 import ConfirmationModal from "../../components/modals/ConfirmationModal"
@@ -149,9 +149,10 @@ export default function FoodInner({
 					<MCIcon name="silverware-fork-knife" color="grayDark" size="xxl" />
 
 					<DropdownMenu
+						applyFlexToMenuContainer
 						renderTrigger={
-							<View style={[inputStyles.input, { flex: 1 }]}>
-								<StyledText type="text">
+							<View style={styles.servingTextContainer}>
+								<StyledText type="text" style={[inputStyles.input, styles.input]}>
 									{selectedServing === "Custom"
 										? "Custom (g)"
 										: selectedServing?.serving_text}
@@ -237,10 +238,12 @@ const styles = StyleSheet.create({
 		gap: theme.spacing.xxs,
 	},
 	inputContainer: {
+		flex: 1,
 		flexDirection: "row",
 		alignItems: "center",
 		gap: theme.spacing.xxs,
 	},
+	servingTextContainer: {},
 	input: {
 		flex: 1,
 	},

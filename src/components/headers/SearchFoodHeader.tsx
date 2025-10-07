@@ -1,8 +1,8 @@
 import { Header } from "@react-navigation/elements"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { navigationStyles } from "../../resources/styles/navigationStyles"
-import { ParamListBase, Route, RouteProp } from "@react-navigation/native"
-import { RootStackParams } from "../../types/navigation"
+import { ParamListBase, Route, RouteProp, useNavigation } from "@react-navigation/native"
+import { RootStackNavigationProp, RootStackParams } from "../../types/navigation"
 import { TouchableOpacity } from "react-native"
 import MCIcon from "../icons/MCIcon"
 import { theme } from "../../resources/theme"
@@ -38,7 +38,7 @@ type HeaderRightProps = {
 function HeaderRight({ navigation }: HeaderRightProps) {
 	return (
 		<TouchableOpacity
-			onPress={() => navigation.navigate("Settings")}
+			onPress={() => navigation.navigate("CreateFood")}
 			style={navigationStyles.headerRightContainer}
 		>
 			<MCIcon name="hamburger-plus" style={navigationStyles.headerIcon} />

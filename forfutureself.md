@@ -2,6 +2,6 @@
 
 # To implement
 
-    - edit entry
+# To test
 
-    - post in db before going to food page after scan
+    - update servings and nutrients (not executing)

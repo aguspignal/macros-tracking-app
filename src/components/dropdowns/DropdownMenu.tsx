@@ -10,12 +10,17 @@ type Option = {
 
 type Props = {
 	renderTrigger?: ReactNode
+	applyFlexToMenuContainer?: boolean
 	options: (Option | null)[]
 }
 
-export default function DropdownMenu({ renderTrigger, options }: Props) {
+export default function DropdownMenu({
+	renderTrigger,
+	options,
+	applyFlexToMenuContainer = false,
+}: Props) {
 	return (
-		<Menu>
+		<Menu style={applyFlexToMenuContainer ? { flex: 1 } : null}>
 			<MenuTrigger>{renderTrigger}</MenuTrigger>
 			<MenuOptions
 				customStyles={{

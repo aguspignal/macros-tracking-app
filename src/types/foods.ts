@@ -67,3 +67,20 @@ export type OpenFoodFactsParsedProduct = {
 	serving: DatabaseServing | null
 	dataPer: "100g" | "serving"
 }
+
+export type NutrientsString = {
+	added_sugars: string
+	calories: string
+	carbohydrates: string
+	cholesterol: string
+	fat: string
+	fiber: string
+	monounsaturated_fat: string
+	polyunsaturated_fat: string
+	potassium: string
+	protein: string
+	saturated_fat: string
+	sodium: string
+	total_sugars: string
+	trans_fat: string
+}

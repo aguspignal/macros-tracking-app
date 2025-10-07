@@ -5,13 +5,13 @@ import foodService from "../services/foodService"
 import ToastNotification from "../components/notifications/ToastNotification"
 
 export default function useFoodMutation() {
-	const createFoodFromScannedProductMutation = useMutation({
+	const createFoodServingNutrientsMutation = useMutation({
 		mutationFn: async ({
 			food,
 			nutrients,
 			serving,
 			nutrientsDataPer,
-		}: createFoodFromScannedProductParams) => {
+		}: createFoodServingNutrientsParams) => {
 			const foodResult = await foodService.postFood({ ...food })
 
 			if (isPostgrestError(foodResult)) {
@@ -116,14 +116,14 @@ export default function useFoodMutation() {
 	})
 
 	return {
-		createFoodFromScannedProductMutation,
+		createFoodServingNutrientsMutation,
 		createFoodEntryMutation,
 		updateFoodEntryMutation,
 		deleteFoodEntryMutation,
 	}
 }
 
-type createFoodFromScannedProductParams = {
+type createFoodServingNutrientsParams = {
 	food: {
 		name: string
 		barcode: string | null

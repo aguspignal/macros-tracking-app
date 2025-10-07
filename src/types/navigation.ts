@@ -32,6 +32,7 @@ export type RootStackParams = {
 	ScanBarcode: {
 		timeOfDay: TimeOfDay | undefined
 	}
+	CreateFood: undefined
 }
 
 export type RootStackScreenProps<T extends keyof RootStackParams> = NativeStackScreenProps<

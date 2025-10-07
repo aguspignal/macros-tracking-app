@@ -25,6 +25,7 @@ export const inputStyles = StyleSheet.create({
 	},
 	containerWithIcon: {
 		position: "relative",
+		gap: 4,
 	},
 	leftIcon: {
 		position: "absolute",
@@ -57,5 +58,13 @@ export const inputStyles = StyleSheet.create({
 	},
 	placeholderText: {
 		color: theme.colors.grayDark,
+	},
+	labelAndActionContainer: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+	},
+	labelIconAndText: {
+		flexDirection: "row",
+		gap: 4,
 	},
 })

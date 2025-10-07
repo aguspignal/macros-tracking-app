@@ -38,11 +38,11 @@ function ScannedFood({ parsedProduct, timeOfDay }: ScannedFoodProps) {
 	if (!parsedProduct) return <ErrorScreen />
 
 	const { user, addOrUpdateFoodEntry } = useUserStore()
-	const { createFoodFromScannedProductMutation, createFoodEntryMutation } = useFoodMutation()
+	const { createFoodServingNutrientsMutation, createFoodEntryMutation } = useFoodMutation()
 	const {
 		mutate: createFood,
 		isPending: isPendingCreateFood,
-	} = createFoodFromScannedProductMutation
+	} = createFoodServingNutrientsMutation
 	const { mutate: createEntry, isPending: isPendingCreateEntry } = createFoodEntryMutation
 	const { navigate } = useNavigation<RootStackNavigationProp>()
 

@@ -171,7 +171,6 @@ const foodService = {
 			.insert({ name, barcode, source, last_update, user_id })
 			.select()
 
-		console.log("service error: ", error)
 		if (error) return error
 		return data[0]
 	},
@@ -226,6 +225,55 @@ const foodService = {
 				time_day: timeOfDay,
 				entry_date: date,
 			})
+			.select()
+
+		if (error) return error
+		return data[0]
+	},
+
+	async updateFood({
+		foodId,
+		barcode,
+		last_update,
+		name,
+	}: updateFoodParams): Promise<DatabaseFood | PostgrestError> {
+		console.log("F-SERVICE: updateFood")
+		const { error, data } = await supabase
+			.from("Foods")
+			.update({ barcode, name, last_update })
+			.eq("id", foodId)
+			.select()
+
+		if (error) return error
+		return data[0]
+	},
+
+	async updateServing({
+		servingId,
+		serving_text,
+		serving_weight,
+		is_grams,
+	}: updateServingParams): Promise<DatabaseServing | PostgrestError> {
+		console.log("F-SERVICE: updateServing")
+		const { error, data } = await supabase
+			.from("Servings")
+			.update({ serving_text, serving_weight, is_grams })
+			.eq("id", servingId)
+			.select()
+
+		if (error) return error
+		return data[0]
+	},
+
+	async updateNutrients({
+		foodId,
+		nutrients,
+	}: updateNutrientsParams): Promise<DatabaseFoodNutrients | PostgrestError> {
+		console.log("F-SERVICE: updateNutrients")
+		const { error, data } = await supabase
+			.from("FoodNutrients")
+			.update({ ...nutrients })
+			.eq("food_id", foodId)
 			.select()
 
 		if (error) return error
@@ -305,6 +353,25 @@ type updateFoodEntryParams = {
 	entryId: number
 	servingId: number | null
 	servingAmount: number
+}
+
+type updateFoodParams = {
+	foodId: number
+	name: string
+	barcode: string | null
+	last_update: string
+}
+
+type updateServingParams = {
+	servingId: number
+	serving_text: string
+	serving_weight: number | null
+	is_grams: boolean
+}
+
+type updateNutrientsParams = {
+	foodId: number
+	nutrients: Nutrients
 }
 
 export default foodService
